@@ -10,6 +10,7 @@ import 'package:flutter_notifcationapp/Services/database_helper.dart';
 import 'package:flutter_notifcationapp/controllers/auth_controller.dart';
 import 'package:flutter_notifcationapp/controllers/user_controller.dart';
 import 'package:flutter_notifcationapp/data/const.dart';
+import 'package:flutter_notifcationapp/views/user_dashbaord.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,14 +25,14 @@ class NotificationController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    requsertPermission();
-    firebseInit(Get.context!, 'user data initState');
+    requestPermission();
+    firebseInit();
     getToken().then((value) {
       if (kDebugMode) {
         dev.log(value.toString());
       }
       token = value.toString();
-      refreshUserToken(token.toString() );
+      refreshUserToken(token.toString());
     });
   }
 
@@ -65,7 +66,7 @@ class NotificationController extends GetxController {
     );
   }
 
-  void requsertPermission() async {
+  void requestPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: true,
@@ -86,12 +87,12 @@ class NotificationController extends GetxController {
       }
     } else {
       if (kDebugMode) {
-        dev.log('user permission done');
+        dev.log('user permission dined');
       }
     }
   }
 
-  void firebseInit(BuildContext context, String data) {
+  void firebseInit() {
     FirebaseMessaging.onMessage.listen((massage) {
       if (kDebugMode) {
         dev.log(massage.notification!.title.toString());
@@ -99,34 +100,37 @@ class NotificationController extends GetxController {
       if (kDebugMode) {
         dev.log(massage.notification!.body.toString());
       }
-      if (kDebugMode) {
-        dev.log(data);
-      }
-      initLocalNotification(context: context, message: massage);
-      showNotification(message: massage);
+
+      initLocalNotification(message: massage);
+      showNotification(
+        message: massage,
+      );
     });
   }
 
   void initLocalNotification({
-    required BuildContext context,
     required RemoteMessage message,
   }) async {
-    var andriodIconSetting =
+    var androidIconSetting =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     var iosIconSetting = const DarwinInitializationSettings();
     var iconSettings = InitializationSettings(
-      android: andriodIconSetting,
+      android: androidIconSetting,
       iOS: iosIconSetting,
     );
     await _flutterLocalNotificationsPlugin.initialize(
       iconSettings,
-      onDidReceiveNotificationResponse: (payload) {},
+      onDidReceiveNotificationResponse: (payload) {
+        handleMessages(message);
+      },
     );
   }
 
-  Future<void> showNotification({required RemoteMessage message}) async {
+  Future<void> showNotification({
+    required RemoteMessage message,
+  }) async {
     var channel = AndroidNotificationChannel(
-      Random.secure().nextInt(100000).toString(),
+      '0',
       'high_importance_channel',
       importance: Importance.max,
     );
@@ -158,6 +162,12 @@ class NotificationController extends GetxController {
         notificationDetails,
       );
     });
+  }
+
+  handleMessages(RemoteMessage message) {
+    if (message.notification != null) {
+      Get.to(() => UserScreen());
+    }
   }
 
   Future<String> getToken() async {

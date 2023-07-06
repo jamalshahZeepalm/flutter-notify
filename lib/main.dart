@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notifcationapp/binding/init_binding.dart';
+import 'package:flutter_notifcationapp/controllers/notifications_controller.dart';
 import 'package:flutter_notifcationapp/firebase_options.dart';
 import 'package:flutter_notifcationapp/views/authScreens/authwraper.dart';
 import 'package:get/get.dart';
@@ -14,13 +17,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessaging);
-  // Directory appDocDir = await getApplicationDocumentsDirectory();
-  // String appDocPath = appDocDir.path;
-  await Hive.initFlutter();
-  await Hive.openBox('box');
 
-  User? user = FirebaseAuth.instance.currentUser;
-  runApp(MyApp(user: user));
+  runApp(MyApp());
 }
 
 @pragma('vm:entry-point')
@@ -28,13 +26,19 @@ Future<void> _firebaseBackgroundMessaging(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  print(message.notification!.title.toString());
+  log(message.notification!.title.toString());
+  NotificationController notificationController = NotificationController();
+
+ 
+  notificationController.showNotification(
+    message: message,
+  );
 }
 
 class MyApp extends StatefulWidget {
-  final User? user;
-
-  const MyApp({super.key, this.user});
+  const MyApp({
+    super.key,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
