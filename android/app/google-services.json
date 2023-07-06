@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "378351569701",
+    "project_id": "flutternoty-23a37",
+    "storage_bucket": "flutternoty-23a37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378351569701:android:278e800bd3f4391fbfe8cc",
+        "android_client_info": {
+          "package_name": "com.example.flutter_notifcationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "378351569701-9ple7iq4lh2dmt43brje0tqjtujp4otv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCahuoDnbrsfFN4xeTKqcaW8l22gwENNw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "378351569701-9ple7iq4lh2dmt43brje0tqjtujp4otv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
